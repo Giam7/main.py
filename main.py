@@ -224,7 +224,7 @@ def main():
     all_paths = []  # contains all possible paths between all possible nodes
 
     network.connect()
-    # network.generate_traffic()
+    network.generate_traffic()
 
     network_fixed.connect()
     network_flex.connect()
@@ -232,11 +232,6 @@ def main():
 
     return
     network_shannon.connect()
-
-    # for node in nodes.values():
-    #     print('Node ' + node.label)
-    #     print(node.switching_matrix)
-    #     print('\n---------------\n')
 
     for src in nodes:
         for dst in nodes:
@@ -246,20 +241,20 @@ def main():
     signal_power = 0.001  # 1mW
     results = {}
 
-    # for paths in all_paths:
-    #     for path in paths:
-    #         sig_inf = SignalInformation(signal_power, path)
-    #         sig_inf = network.propagate(sig_inf, 0)
-    #         path_str = '->'.join(path)
-    #         results.update(
-    #             {path_str: [sig_inf.latency, sig_inf.noise_power, 10 * math.log10(signal_power / sig_inf.noise_power)]})
-    #
-    # network.weighted_paths = pd.DataFrame(data=results)
-    # network.weighted_paths.index = ['Latency (s)', 'Noise power (W)', 'SNR (dB)']
-    # df = network.weighted_paths
-    # print(list(df.columns))
+    for paths in all_paths:
+         for path in paths:
+             sig_inf = SignalInformation(signal_power, path)
+             sig_inf = network.propagate(sig_inf, 0)
+             path_str = '->'.join(path)
+             results.update(
+                 {path_str: [sig_inf.latency, sig_inf.noise_power, 10 * math.log10(signal_power / sig_inf.noise_power)]})
 
-    # df.columns = ['Latency (s)', 'Noise power (W)', 'SNR (dB)']
+    network.weighted_paths = pd.DataFrame(data=results)
+    network.weighted_paths.index = ['Latency (s)', 'Noise power (W)', 'SNR (dB)']
+    df = network.weighted_paths
+    print(list(df.columns))
+
+    df.columns = ['Latency (s)', 'Noise power (W)', 'SNR (dB)']
 
     src_node = nodes.get('A').label
     dst_node = nodes.get('B').label
@@ -286,26 +281,25 @@ def main():
         connections_flex.append(Connection(src, dst, signal_power))
         connections_shannon.append(Connection(src, dst, signal_power))
 
-    # connections.append(Connection(src_node, dst_node, signal_power))
+    connections.append(Connection(src_node, dst_node, signal_power))
 
-    # network.stream(connections)
+    network.stream(connections)
 
-    # connections_fixed = []
-    # for i in range(0, 100):
-    #     connections_fixed.append(Connection('A', 'B', signal_power))
+    connections_fixed = []
+    for i in range(0, 100):
+        connections_fixed.append(Connection('A', 'B', signal_power))
 
     i = 1
-    # for connection in connections_fixed:
-    #     print(f'{i}:{connection.input}->{connection.output}')
-    #     i += 1
+    for connection in connections_fixed:
+        print(f'{i}:{connection.input}->{connection.output}')
+        i += 1
 
     network_fixed.stream(connections_fixed)
-    network_fixed.route_space.transpose().to_csv('Output_files/route_space_latency.csv')
     i = 1
-    # for connection in connections_fixed:
-    #     print(f'{i}:\t\t{connection.input}->{connection.output}\t{connection.bit_rate}')
-    #     i += 1
-    # print('\n--------------------------\n')
+    for connection in connections_fixed:
+        print(f'{i}:\t\t{connection.input}->{connection.output}\t{connection.bit_rate}')
+        i += 1
+    print('\n--------------------------\n')
 
     network_flex.stream(connections_flex)
 
@@ -356,8 +350,8 @@ def main():
     df = pd.DataFrame(data={'latency': latencies, 'snr': snrs})
 
     df.plot.kde(subplots=True, sharex=False, sharey=False, title='Best latency')
-    # df.plot.bar(subplots=True, sharex=False, sharey=False, title='Best latency')
-    # plt.show()
+    df.plot.bar(subplots=True, sharex=False, sharey=False, title='Best latency')
+    plt.show()
 
     # for line in network.lines:
     #     for channel in network.route_space.index:
@@ -378,7 +372,7 @@ def main():
     df.plot.kde(subplots=True, sharex=False, sharey=False, title='Best SNR')
     df.plot.bar(subplots=True, sharex=False, sharey=False, title='Best SNR')
     plt.show()
-
+    print ("ciao")
 
 if __name__ == '__main__':
     main()
