@@ -372,7 +372,6 @@ def main():
     df.plot.kde(subplots=True, sharex=False, sharey=False, title='Best SNR')
     df.plot.bar(subplots=True, sharex=False, sharey=False, title='Best SNR')
     plt.show()
-    print ("ciao")
 
 if __name__ == '__main__':
     main()
