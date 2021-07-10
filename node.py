@@ -12,7 +12,7 @@ class Node:
         self._connected_nodes = list(attr_dict.get('connected_nodes'))
         self._successive = {}  # dictionary of lines
         self._switching_matrix = None
-        self._transceiver = attr_dict.get('transceiver', 'shannon')
+        self._transceiver = attr_dict.get('transceiver', 'flex_rate')
 
     @property
     def label(self):
